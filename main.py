@@ -37,8 +37,8 @@ parser.add_argument('--momentum', default=0.9, type=float,
                     help='momentum (default: 0.9)')
 
 # Set scheduler
-parser.add_argument('--is-scheduler', default=True, type=bool,
-                    help='Is scheduler (default: True)')
+parser.add_argument('--is-scheduler', default=False, type=bool,
+                    help='Is scheduler (default: False)')
 parser.add_argument('--step-size', default=25, type=int,
                     help='Step size (default: 25)')
 parser.add_argument('--gamma', default=0.1, type=float,
@@ -59,7 +59,7 @@ args = parser.parse_args()
 if __name__ == "__main__":
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     run = RunModel(device=device, name=args.name,
-                   train_path=args.train_path, val_path=args.val_path, test_path=args.test_path, test_video_path=args.test_video_path, batch_size=args.batch_size,
+                   train_path=args.train_path, val_path=args.val_path, test_path=args.test_path, batch_size=args.batch_size,
                    lr=args.lr, weight_decay=args.weight_decay, momentum=args.momentum,
                    is_scheduler=args.is_scheduler, step_size=args.step_size, gamma=args.gamma,
                    num_class=args.num_class, pretrained=args.pretrained)
