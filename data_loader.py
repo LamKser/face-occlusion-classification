@@ -21,6 +21,7 @@ class InstanceReader(Dataset):
     def __init__(self, image_path, transform=None):
         self.transform = transform
         self.isdir= Path(image_path).is_dir()
+        
         if self.isdir:
             self.files = glob.glob(image_path + '/*')
         else:
@@ -46,6 +47,7 @@ class LoadData:
         self.test_path = test_path
         self.batch_size = batch_size
         self.input_size = input_size
+
     def train_loader(self):
         transform = transforms.Compose([
             transforms.Resize([224, 224]),
@@ -88,18 +90,19 @@ class LoadData:
 
         return test_data
 
-    def get_instance_data_loader(instance_directory,batch_size=1):
-        """
-        INSTANCE_DIRECTORY: directoy of images, or path of a single image
-        RETURNS: DataLoader for iteration over the given directory or path
-        """
-        data_loader = DataLoader(
-            InstanceReader(instance_directory, transforms.Compose([
-                transforms.Resize([224, 224]),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                    std=[0.229, 0.224, 0.225])
-            ])),
-            batch_size=batch_size, shuffle=False)
+def get_instance_data_loader(instance_directory,batch_size=1):
+    """
+    INSTANCE_DIRECTORY: directoy of images, or path of a single image
+    RETURNS: DataLoader for iteration over the given directory or path
+    """
+    # print(instance_directory)
+    data_loader = DataLoader(
+        InstanceReader(instance_directory, transforms.Compose([
+            transforms.Resize([224, 224]),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                std=[0.229, 0.224, 0.225])
+        ])),
+        batch_size=batch_size, shuffle=False)
 
-        return data_loader
+    return data_loader

@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch
 from tqdm import tqdm
 import pandas as pd
-from data_loader import LoadData
+from data_loader import LoadData, get_instance_data_loader
 import os
 from PIL import ImageFile
 import numpy as np
@@ -233,8 +233,12 @@ class RunModel():
 
         writer.close()
 
-    def test(self, file_csv, weight_file):
+    def test(self, file_csv, weight_file, device=None):
+        if device:
+            device = self.device
+
         df = pd.DataFrame(columns=['fname', 'ground_truth', 'predict'])
+        df = pd.DataFrame(columns=['fname', 'ground_truth', 'predict', 'prob', f'time_{str(device)}'])
         test_data = self.data.test_loader()
 
         # Load state_dict file
@@ -246,6 +250,9 @@ class RunModel():
         paths = []
         ground_truths = []
         predicts = []
+        times = []
+        probs = []
+        
         with torch.set_grad_enabled(False):
             self.model.eval()
             total_acc = 0
@@ -258,9 +265,17 @@ class RunModel():
 
             for step, (path, images, targets) in pbar:
                 images, targets = images.to(self.device), targets.to(self.device)
+                
+                start = time.time()
                 outputs = self.model(images)
+                end = time.time()
+                
+                # _, predict = torch.max(outputs.data, 1)
+                prob = torch.softmax(outputs.data, 1)
+                percent, predict = torch.max(prob, 1)
 
-                _, predict = torch.max(outputs.data, 1)
+                
+
                 total_acc = total_acc + (predict == targets).sum().item()
                 total = total + images.size(0)
 
@@ -268,45 +283,52 @@ class RunModel():
                 paths.append(path)
                 predicts.append(predict.data.cpu().numpy())
                 ground_truths.append(targets.data.cpu().numpy())
+                probs.append(percent.data.cpu().numpy())
+                times.append(time)
+
                 if step % 200:
                     pbar.set_postfix(acc=f'{total_acc/total:.4f}')
 
             ave_acc = total_acc / total
             pbar.set_postfix(acc=f'{ave_acc:.4f}')
 
+        # Save to csv
         paths = np.array([subpath.split('\\')[-1] for p in paths for subpath in p])
         predicts = np.array([subpredict for s in predicts for subpredict in s])
         ground_truths = np.array([subtruth for truth in ground_truths for subtruth in truth])
+        probs = np.array([subprob for prob in probs for subprob in prob])
+
         df['fname'] = paths
         df['ground_truth'] = ground_truths
         df['predict'] = predicts
-
+        df[f'time_{str(device)}'] = times
+        df['prob'] = probs
         df.to_csv(file_csv, index=False)
+
         print(f'Saved results in {file_csv}')
 
+'''
     def test_image(self, instance_directory, file_csv, weight_file, device):
-        df = pd.DataFrame(columns=['fname', 'ground_truth', 'predict', 'Prob', f'time_{str(device)}'])
-        test_data = self.data.get_instance_data_loader(instance_directory)
-
+        df = pd.DataFrame(columns=['fname', 'predict', 'Prob', f'time_{str(device)}'])
+        test_data = get_instance_data_loader(instance_directory)
+        # img, im_file
         # Load state_dict file
         checkpoint = torch.load(weight_file)
         self.model.load_state_dict(checkpoint['state_dict'])
 
         paths = []
-        ground_truths = []
         predicts = []
+        times = []
         with torch.set_grad_enabled(False):
             self.model.eval()
-            total_acc = 0
-            total = 0
 
             pbar = tqdm(enumerate(test_data),
                         total=len(test_data),
                         bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}')
             pbar.set_description('Testing model')
 
-            for step, (path, images, targets) in pbar:
-                images, targets = images.to(self.device), targets.to(self.device)
+            for step, (images, path) in pbar:
+                images = images.to(self.device)
 
                 # Calculate time inference
                 start = time.time()
@@ -314,34 +336,27 @@ class RunModel():
                 end = time.time()
 
                 _, predict = torch.max(outputs.data, 1)
-                total_acc = total_acc + (predict == targets).sum().item()
-                total = total + images.size(0)
 
                 # Save to csv
                 paths.append(path)
                 predicts.append(predict.data.cpu().numpy())
-                ground_truths.append(targets.data.cpu().numpy())
-                if step % 200:
-                    pbar.set_postfix(acc=f'{total_acc/total:.4f}')
+                times.append(end-start)
 
-            ave_acc = total_acc / total
-            pbar.set_postfix(acc=f'{ave_acc:.4f}')
 
         paths = np.array([subpath.split('\\')[-1] for p in paths for subpath in p])
         predicts = np.array([subpredict for s in predicts for subpredict in s])
-        ground_truths = np.array([subtruth for truth in ground_truths for subtruth in truth])
-        df['fname'] = paths
-        df['ground_truth'] = ground_truths
-        df['predict'] = predicts
 
+        df['fname'] = paths
+        df['predict'] = predicts
+        df[f'time_{str(device)}'] = times
         df.to_csv(file_csv, index=False)
         print(f'Saved results in {file_csv}')
-
+'''
 
 # if __name__ == '__main__':
 #     from torchsummary import summary
-#     tmp = Model('resnet50', 2)
-#     checkpoint = torch.load('D:\\Unicloud\\liveness_detection\\face-occlusion-classification\\weights\\resnet50_3_224_224\\resnet50_3_224_224.pt')
+#     tmp = Model('vgg11', 2)
+#     checkpoint = torch.load('D:\\Unicloud\\liveness_detection\\face-occlusion-classification\\weights\\vgg11_224_224\\vgg11_3_224_224.pt')
 #     tmp.load_state_dict(checkpoint['state_dict'])
 #     # print(tmp)
 #     print(summary(tmp.cuda(), (3, 224, 224)))

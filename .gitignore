@@ -131,4 +131,5 @@ dmypy.json
 results
 weights
 benchmark.csv
-test_real_imgs
+test_real
+command.ipynb
