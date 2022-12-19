@@ -191,9 +191,13 @@ class RunModel():
                 __val_acc, __val_loss = self.__val(epoch, epochs, val_data)
                 
                 # Save best accuracy
-                if best_acc < __val_acc:
-                    best_acc = __val_acc
-                    self.__save_model(os.path.join(save_path, f'best_{epoch}_'), weight_file)
+                # if best_acc < __val_acc:
+                #     best_acc = __val_acc
+                #     self.__save_model(os.path.join(save_path, f'best_{epoch}_'), weight_file)
+
+            # Save model
+            if __train_acc > __val_acc and best_acc < __val_acc:
+                self.__save_model(save_path, weight_file)
 
             if not (self.scheduler is None):
                 self.scheduler.step()
@@ -210,7 +214,9 @@ class RunModel():
                 writer.add_scalars('Loss', {'train': __train_loss}, epoch)
                 writer.add_scalars('Accuracy', {'train': __train_acc}, epoch)
 
-            self.__save_model(save_path, weight_file)
+            # Save last model weight
+            self.__save_model(save_path, 'last_' + weight_file)
+
         writer.close()
 
     def test(self, file_csv, weight_file):
