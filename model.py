@@ -64,7 +64,7 @@ class Model(nn.Module):
 class RunModel():
 
     def __init__(self, device, name,
-                 train_path, val_path, test_path, test_video_path, batch_size,
+                 train_path, val_path, test_path, batch_size,
                  lr, weight_decay, momentum,
                  is_scheduler, step_size, gamma,
                  num_class=1, pretrained=False):
@@ -83,8 +83,7 @@ class RunModel():
         else:
             self.scheduler = None
 
-        self.data = LoadData(train_path, val_path, test_path,
-                             test_video_path, batch_size)
+        self.data = LoadData(train_path, val_path, test_path, batch_size)
 
         print('Model used:', name)
         print("Device use:", self.device)
