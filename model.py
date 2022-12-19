@@ -66,7 +66,7 @@ class RunModel():
     def __init__(self, device, name,
                  train_path, val_path, test_path, batch_size,
                  lr, weight_decay, momentum,
-                 is_scheduler, step_size, gamma,
+                 step_size, gamma,
                  num_class=1, pretrained=False):
         self.device = device
         self.model = Model(name, num_class, pretrained).to(self.device)
@@ -76,13 +76,10 @@ class RunModel():
                                    momentum=momentum)
 
         self.critetion = nn.CrossEntropyLoss().to(self.device)
-        if is_scheduler:
-            self.scheduler = optim.lr_scheduler.StepLR(self.optimizer,
-                                                       step_size=step_size,
-                                                       gamma=gamma)
-        else:
-            self.scheduler = None
 
+        self.scheduler = optim.lr_scheduler.StepLR(self.optimizer,
+                                                    step_size=step_size,
+                                                    gamma=gamma)
         self.data = LoadData(train_path, val_path, test_path, batch_size)
 
         print('Model used:', name)
@@ -166,7 +163,7 @@ class RunModel():
 
         return ave_acc, ave_loss
 
-    def train(self, epochs, save_path, weight_file, logger_path, val=True, continue_train=False):
+    def train(self, epochs, save_path, weight_file, logger_path, val=True, continue_train=False, is_scheduler=False):
 
         best_acc = 0.0
         train_data = self.data.train_loader()
@@ -198,7 +195,7 @@ class RunModel():
             if __train_acc > __val_acc and best_acc < __val_acc:
                 self.__save_model(save_path, weight_file)
 
-            if not (self.scheduler is None):
+            if is_scheduler:
                 self.scheduler.step()
 
             # Write to log file
