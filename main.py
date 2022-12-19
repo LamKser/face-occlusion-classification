@@ -58,6 +58,7 @@ args = parser.parse_args()
 
 if __name__ == "__main__":
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
     run = RunModel(device=device, name=args.name,
                    train_path=args.train_path, val_path=args.val_path, test_path=args.test_path, batch_size=args.batch_size,
                    lr=args.lr, weight_decay=args.weight_decay, momentum=args.momentum,

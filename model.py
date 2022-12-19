@@ -6,9 +6,9 @@ from tqdm import tqdm
 import pandas as pd
 from data_loader import LoadData
 import os
-from PIL import ImageFile, Image
+from PIL import ImageFile
 import numpy as np
-import cv2
+import time
 from torch.utils.tensorboard import SummaryWriter
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -18,7 +18,8 @@ class Model(nn.Module):
 
     def __init__(self, name, num_class, pretrained=False):
         super(Model, self).__init__()
-
+        
+        # =================Resnet=======================
         # ResNet 18
         if name == 'resnet18':
             if pretrained:
@@ -53,13 +54,29 @@ class Model(nn.Module):
             else:
                 self.model = models.resnet152()
 
+        
+        # =================Vgg=======================
+        elif name == 'vgg11':
+            if pretrained:
+                self.model = models.vgg11(weights=models.VGG11_Weights.IMAGENET1K_V1)
+            else:
+                self.model = models.vgg11()
+        elif name == 'vgg16':
+            if pretrained:
+                self.model = models.vgg11(weights=models.VGG11_Weights.IMAGENET1K_V1)
+            else:
+                self.model = models.vgg11()
+
         # Change the number of class
-        in_features = self.model.fc.in_features
-        self.model.fc = nn.Linear(in_features, num_class)
+        if 'resnet' in name:
+            in_features = self.model.fc.in_features
+            self.model.fc = nn.Linear(in_features, num_class)
+        elif 'vgg' in name:
+            in_features = self.model.classifier[6].in_features
+            self.model.classifier[6] = nn.Linear(in_features, num_class)
 
     def forward(self, x):
         return self.model(x)
-
 
 class RunModel():
 
@@ -83,17 +100,18 @@ class RunModel():
         self.data = LoadData(train_path, val_path, test_path, batch_size)
 
         print('Model used:', name)
+        print(self.model)
         print("Device use:", self.device)
         print("Done load dataset")
-        
 
-    def __save_model(self, save_path, weight_file):
+    def __save_model(self, save_path, weight_file, epoch):
         # Create path if not exists
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
-        torch.save({'state_dict': self.model.state_dict()},
-                   os.path.join(save_path, weight_file))
+        torch.save({'state_dict': self.model.state_dict(),
+                    'Epoch': epoch},
+                    os.path.join(save_path, weight_file))
 
     def __train_one_epoch(self, epoch, epochs, train_data):
         with torch.set_grad_enabled(True):
@@ -193,10 +211,10 @@ class RunModel():
 
             # Save model
             if __train_acc > __val_acc and best_acc < __val_acc:
-                self.__save_model(save_path, weight_file)
+                self.__save_model(save_path, weight_file, epoch)
 
-            if is_scheduler:
-                self.scheduler.step()
+            # if is_scheduler:
+            #     self.scheduler.step()
 
             # Write to log file
             if val:
@@ -211,7 +229,7 @@ class RunModel():
                 writer.add_scalars('Accuracy', {'train': __train_acc}, epoch)
 
             # Save last model weight
-            self.__save_model(save_path, 'last_' + weight_file)
+            self.__save_model(save_path, 'last_' + weight_file, epoch)
 
         writer.close()
 
@@ -221,6 +239,8 @@ class RunModel():
 
         # Load state_dict file
         checkpoint = torch.load(weight_file)
+        print('Best model at epoch', checkpoint['Epoch'])
+        
         self.model.load_state_dict(checkpoint['state_dict'])
 
         paths = []
@@ -264,3 +284,64 @@ class RunModel():
         df.to_csv(file_csv, index=False)
         print(f'Saved results in {file_csv}')
 
+    def test_image(self, instance_directory, file_csv, weight_file, device):
+        df = pd.DataFrame(columns=['fname', 'ground_truth', 'predict', 'Prob', f'time_{str(device)}'])
+        test_data = self.data.get_instance_data_loader(instance_directory)
+
+        # Load state_dict file
+        checkpoint = torch.load(weight_file)
+        self.model.load_state_dict(checkpoint['state_dict'])
+
+        paths = []
+        ground_truths = []
+        predicts = []
+        with torch.set_grad_enabled(False):
+            self.model.eval()
+            total_acc = 0
+            total = 0
+
+            pbar = tqdm(enumerate(test_data),
+                        total=len(test_data),
+                        bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}')
+            pbar.set_description('Testing model')
+
+            for step, (path, images, targets) in pbar:
+                images, targets = images.to(self.device), targets.to(self.device)
+
+                # Calculate time inference
+                start = time.time()
+                outputs = self.model(images)
+                end = time.time()
+
+                _, predict = torch.max(outputs.data, 1)
+                total_acc = total_acc + (predict == targets).sum().item()
+                total = total + images.size(0)
+
+                # Save to csv
+                paths.append(path)
+                predicts.append(predict.data.cpu().numpy())
+                ground_truths.append(targets.data.cpu().numpy())
+                if step % 200:
+                    pbar.set_postfix(acc=f'{total_acc/total:.4f}')
+
+            ave_acc = total_acc / total
+            pbar.set_postfix(acc=f'{ave_acc:.4f}')
+
+        paths = np.array([subpath.split('\\')[-1] for p in paths for subpath in p])
+        predicts = np.array([subpredict for s in predicts for subpredict in s])
+        ground_truths = np.array([subtruth for truth in ground_truths for subtruth in truth])
+        df['fname'] = paths
+        df['ground_truth'] = ground_truths
+        df['predict'] = predicts
+
+        df.to_csv(file_csv, index=False)
+        print(f'Saved results in {file_csv}')
+
+
+# if __name__ == '__main__':
+#     from torchsummary import summary
+#     tmp = Model('vgg11', 2)
+#     # checkpoint = torch.load('D:\\Unicloud\\liveness_detection\\face-occlusion-classification\\weights\\resnet18_224_224\\resnet18_3_224_224.pt')
+#     # tmp.load_state_dict(checkpoint['state_dict'])
+#     print(tmp)
+#     # print(summary(tmp.cuda(), (3, 224, 224)))
