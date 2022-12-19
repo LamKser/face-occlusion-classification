@@ -100,7 +100,6 @@ class RunModel():
         self.data = LoadData(train_path, val_path, test_path, batch_size)
 
         print('Model used:', name)
-        print(self.model)
         print("Device use:", self.device)
         print("Done load dataset")
 
@@ -211,6 +210,7 @@ class RunModel():
 
             # Save model
             if __train_acc > __val_acc and best_acc < __val_acc:
+                best_acc = __val_acc
                 self.__save_model(save_path, weight_file, epoch)
 
             # if is_scheduler:
@@ -240,7 +240,7 @@ class RunModel():
         # Load state_dict file
         checkpoint = torch.load(weight_file)
         print('Best model at epoch', checkpoint['Epoch'])
-        
+
         self.model.load_state_dict(checkpoint['state_dict'])
 
         paths = []
@@ -340,8 +340,8 @@ class RunModel():
 
 # if __name__ == '__main__':
 #     from torchsummary import summary
-#     tmp = Model('vgg11', 2)
-#     # checkpoint = torch.load('D:\\Unicloud\\liveness_detection\\face-occlusion-classification\\weights\\resnet18_224_224\\resnet18_3_224_224.pt')
-#     # tmp.load_state_dict(checkpoint['state_dict'])
-#     print(tmp)
-#     # print(summary(tmp.cuda(), (3, 224, 224)))
+#     tmp = Model('resnet50', 2)
+#     checkpoint = torch.load('D:\\Unicloud\\liveness_detection\\face-occlusion-classification\\weights\\resnet50_3_224_224\\resnet50_3_224_224.pt')
+#     tmp.load_state_dict(checkpoint['state_dict'])
+#     # print(tmp)
+#     print(summary(tmp.cuda(), (3, 224, 224)))
