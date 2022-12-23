@@ -18,7 +18,7 @@ class Model(nn.Module):
 
     def __init__(self, name, num_class, pretrained=False):
         super(Model, self).__init__()
-        
+
         # =================Resnet=======================
         # ResNet 18
         if name == 'resnet18':
@@ -67,8 +67,17 @@ class Model(nn.Module):
             else:
                 self.model = models.vgg11()
 
+
+        # DenseNet
+        elif name == 'densenet169':
+            if pretrained:
+                self.model = models.densenet169(weights=models.DenseNet169_Weights.IMAGENET1K_V1)
+            else:
+                self.model = models.densenet169()
+
+
         # Change the number of class
-        if 'resnet' in name:
+        if 'resnet' in name or 'densenet' in name:
             in_features = self.model.fc.in_features
             self.model.fc = nn.Linear(in_features, num_class)
         elif 'vgg' in name:
@@ -84,7 +93,7 @@ class RunModel():
                  train_path, val_path, test_path, batch_size,
                  lr, weight_decay, momentum,
                  step_size, gamma,
-                 num_class=1, pretrained=False):
+                 num_class=2, pretrained=False):
         self.device = device
         self.model = Model(name, num_class, pretrained).to(self.device)
         self.optimizer = optim.SGD(self.model.parameters(),
@@ -274,8 +283,6 @@ class RunModel():
                 prob = torch.softmax(outputs.data, 1)
                 percent, predict = torch.max(prob, 1)
 
-                
-
                 total_acc = total_acc + (predict == targets).sum().item()
                 total = total + images.size(0)
 
@@ -293,7 +300,8 @@ class RunModel():
             pbar.set_postfix(acc=f'{ave_acc:.4f}')
 
         # Save to csv
-        paths = np.array([subpath.split('\\')[-1] for p in paths for subpath in p])
+        # paths = np.array([subpath.split('\\')[-1] for p in paths for subpath in p])
+        paths = np.array([subpath for p in paths for subpath in p])
         predicts = np.array([subpredict for s in predicts for subpredict in s])
         ground_truths = np.array([subtruth for truth in ground_truths for subtruth in truth])
         probs = np.array([subprob for prob in probs for subprob in prob])
@@ -307,56 +315,11 @@ class RunModel():
 
         print(f'Saved results in {file_csv}')
 
-'''
-    def test_image(self, instance_directory, file_csv, weight_file, device):
-        df = pd.DataFrame(columns=['fname', 'predict', 'Prob', f'time_{str(device)}'])
-        test_data = get_instance_data_loader(instance_directory)
-        # img, im_file
-        # Load state_dict file
-        checkpoint = torch.load(weight_file)
-        self.model.load_state_dict(checkpoint['state_dict'])
-
-        paths = []
-        predicts = []
-        times = []
-        with torch.set_grad_enabled(False):
-            self.model.eval()
-
-            pbar = tqdm(enumerate(test_data),
-                        total=len(test_data),
-                        bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}')
-            pbar.set_description('Testing model')
-
-            for step, (images, path) in pbar:
-                images = images.to(self.device)
-
-                # Calculate time inference
-                start = time.time()
-                outputs = self.model(images)
-                end = time.time()
-
-                _, predict = torch.max(outputs.data, 1)
-
-                # Save to csv
-                paths.append(path)
-                predicts.append(predict.data.cpu().numpy())
-                times.append(end-start)
-
-
-        paths = np.array([subpath.split('\\')[-1] for p in paths for subpath in p])
-        predicts = np.array([subpredict for s in predicts for subpredict in s])
-
-        df['fname'] = paths
-        df['predict'] = predicts
-        df[f'time_{str(device)}'] = times
-        df.to_csv(file_csv, index=False)
-        print(f'Saved results in {file_csv}')
-'''
-
-# if __name__ == '__main__':
-#     from torchsummary import summary
-#     tmp = Model('vgg11', 2)
-#     checkpoint = torch.load('D:\\Unicloud\\liveness_detection\\face-occlusion-classification\\weights\\vgg11_224_224\\vgg11_3_224_224.pt')
-#     tmp.load_state_dict(checkpoint['state_dict'])
-#     # print(tmp)
-#     print(summary(tmp.cuda(), (3, 224, 224)))
+if __name__ == '__main__':
+    # from torchsummary import summary
+    # tmp = Model('vgg11', 2)
+    # checkpoint = torch.load('D:\\Unicloud\\liveness_detection\\face-occlusion-classification\\weights\\vgg11_224_224\\vgg11_3_224_224.pt')
+    # tmp.load_state_dict(checkpoint['state_dict'])
+    # # print(tmp)
+    # print(summary(tmp.cuda(), (3, 224, 224)))
+    l = Model('vgg11', 2)
