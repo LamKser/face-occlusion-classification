@@ -77,12 +77,16 @@ class Model(nn.Module):
 
 
         # Change the number of class
-        if 'resnet' in name or 'densenet' in name:
+        if 'resnet' in name:
             in_features = self.model.fc.in_features
             self.model.fc = nn.Linear(in_features, num_class)
         elif 'vgg' in name:
             in_features = self.model.classifier[6].in_features
             self.model.classifier[6] = nn.Linear(in_features, num_class)
+        elif 'densenet' in name:
+            in_features = self.model.classifier.in_features
+            self.model.classifier = nn.Linear(in_features, num_class)
+             
 
     def forward(self, x):
         return self.model(x)
