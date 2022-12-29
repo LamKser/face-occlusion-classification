@@ -1,3 +1,79 @@
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)][1]
+[![Google Drive](https://img.shields.io/badge/Google%20Drive-00897B?style=for-the-badge&logo=google-drive&logoColor=white)][2]
+![Pytorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+![Numpy](https://img.shields.io/badge/Numpy-777BB4?style=for-the-badge&logo=numpy&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)
+![Python](https://img.shields.io/badge/Python_3.9-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
+![Windows](https://img.shields.io/badge/Windows_10-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+
+[1]: https://www.linkedin.com/in/hoang-lam-dinh-901193191/
+[2]: https://drive.google.com/file/d/1bhvyVwhNGhrojxEXdSPAEX6-3dPTXg95/view?usp=share_link
+
 # Face occlusion classification
-## **Phase 1:** Classify whether face is occluded
+
+## **Phase 1:** Classify whether face is occluded or not
+
+**1.1 :books: Dataset** 
+
+* Crawl 9,749 images from the internet, crop the face by using [FaceMaskDetection](https://github.com/AIZOOTech/FaceMaskDetection) and divide into 2 classes:
+    * `0` - Non-occluded face
+    * `1` - Occluded face
+* Then split the dataset into 3 sets (7 - 2 - 1):
+    * `Train set` : 6,826 images
+    * `Val set` : 1,945 images
+    * `Test set` : 978 images
+
+* Data structure:
+    ```
+    face_occlusion
+    ├───Train
+    │   ├───1
+    │   │   ├─face_0.jpg
+    │   │   ├─face_1.jpg
+    │   │   └...
+    │   └───0
+    ├───Val
+    │   ├───1
+    │   └───0
+    └───Test
+        ├───1
+        └───0
+    ```
+* :link: Data link: [face occlusion dataset](https://drive.google.com/file/d/1bhvyVwhNGhrojxEXdSPAEX6-3dPTXg95/view?usp=share_link)
+
+**1.2 :building_construction: Train model**
+* Use the pretrained DenseNet169 Model (default):
+
+    ```Shell
+    python main.py --train-path face_occlusion/Train \
+                   --val-path face_occlusion/Val \
+                   --save-dir weight/folder/you/want/to/save \
+                   --weight-name name_the_file.pt \
+                   --mode train
+    ```
+* In case you want to train the model from scratch, run the command below:
+
+    ```Shell
+    python main.py --train-path face_occlusion/Train \
+                   --val-path face_occlusion/Val \
+                   --save-dir weight/folder/you/want/to/save \
+                   --weight-name name_the_file.pt \
+                   --pretrained 0 \
+                   --mode train
+    ```
+
+**1.3 :chart_with_upwards_trend: Test model**
+* Test the model
+
+    ```Shell
+    python main.py --test-path face_occlusion/Test \
+                   --csv predict_file.csv \
+                   --save-dir saved/weight/folder \
+                   --weight-name weight_file.pt \
+                   --mode test
+    ```
+
+**Note:** 
+* To use other model or change some parameters, you can edit in `config.yaml`
+* Other model: resnet18, resnet50
 ## References

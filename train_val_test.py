@@ -162,7 +162,7 @@ class Run():
 
         writer.close()
 
-    def test(self, test_path: str, save_dir: str, weight_name: str, csv_path: str):
+    def test(self, test_path: str, save_dir: str, weight_name: str, csv_file: str):
         
         # Saving predict results to csv
         df_test = pd.DataFrame(columns=['fname', 'ground_truth', 'predict'])
@@ -212,9 +212,9 @@ class Run():
         df_test['predict'] = np.array([submodel for model in models for submodel in model])
 
         df_test.sort_values(by=['fname'], inplace=True)
-        df_test.to_csv(csv_path, index=False)
+        df_test.to_csv(csv_file, index=False)
 
-        print(f'Saved csv at {csv_path}')
+        print(f'Saved csv at {csv_file}')
         
 
 

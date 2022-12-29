@@ -15,8 +15,8 @@ parser.add_argument('--weight-name', default='densenet169.pt', type=str,
                     help='Weight file (default: "resnet18.pt")')
 parser.add_argument('--csv', default='densenet169.csv', type=str,
                     help='Save csv (default: "densenet169.csv")')
-parser.add_argument('--pretrained', default=True, type=bool,
-                    help='Pretrained (ImageNet) (default: True)')
+parser.add_argument('--pretrained', default=1, type=int,
+                    help='Pretrained (ImageNet) (default: 1)')
 parser.add_argument('--mode', default='train', type=str,
                     help='Choose mode for running model (default: train)')
 parser.add_argument('--logger-path', default='logger', type=str,
