@@ -1,7 +1,9 @@
 from torch.utils.tensorboard import SummaryWriter
+from torchvision import transforms
 from torch import nn, optim
 import torch
 
+from PIL import Image
 from tqdm import tqdm 
 import pandas as pd
 import numpy as np
@@ -49,7 +51,8 @@ class Run():
         
     def load_weight(self, save_dir: str, weight_name: str):
         checkpoints = torch.load(os.path.join(save_dir, weight_name))
-        return checkpoints['epoch'], checkpoints['state_dict']
+        print('Model at epoch:', checkpoints['epoch'])
+        self.model.load_state_dict(checkpoints['state_dict'])
 
     def train_one_epoch(self, epoch: str, train_data):
 
@@ -173,9 +176,7 @@ class Run():
         test_set = self.data.test_loader(test_path)
 
         # Load weight
-        epoch, weight = self.load_weight(save_dir, weight_name)
-        self.model.load_state_dict(weight)
-        print(f'Model weight at {epoch}')
+        self.load_weight(save_dir, weight_name)
 
         with torch.set_grad_enabled(False):
             self.model.eval()
@@ -216,5 +217,24 @@ class Run():
 
         print(f'Saved csv at {csv_file}')
         
+    def test_image(self, image_path, save_dir, weight_name):
 
+        labels = {0: 'Non-occluded', 1: 'Occluded'}
+        self.load_weight(save_dir, weight_name)
+        self.model.eval()
+        
+        transform = transforms.Compose([
+            transforms.Resize(config['input_size']),
+            transforms.ToTensor(),
+            transforms.Normalize(config['mean'], config['std'])
+        ])
+        
+        image = Image.open(image_path)
+        image = transform(image).to(self.device)
+
+        outputs = self.model(image.unsqueeze(0))
+        outputs = torch.softmax(outputs, 1)
+        probability, predict = torch.max(outputs, 1)
+        
+        print(labels[predict.item()], '-', '{:.2f} %'.format(probability.item() * 100))
 

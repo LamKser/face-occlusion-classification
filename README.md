@@ -1,12 +1,10 @@
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)][1]
-[![Google Drive](https://img.shields.io/badge/Google%20Drive-00897B?style=for-the-badge&logo=google-drive&logoColor=white)][2]
+[![Google Drive](https://img.shields.io/badge/Google%20Drive-00897B?style=for-the-badge&logo=google-drive&logoColor=white)][1]
 ![Pytorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white)
 ![Numpy](https://img.shields.io/badge/Numpy-777BB4?style=for-the-badge&logo=numpy&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)
 ![Python](https://img.shields.io/badge/Python_3.9-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
 
-[1]: https://www.linkedin.com/in/hoang-lam-dinh-901193191/
-[2]: https://drive.google.com/file/d/1bhvyVwhNGhrojxEXdSPAEX6-3dPTXg95/view?usp=share_link
+[1]: https://drive.google.com/file/d/1bhvyVwhNGhrojxEXdSPAEX6-3dPTXg95/view?usp=share_link
 
 # Face occlusion classification
 
@@ -22,14 +20,14 @@ cd face-occlusion-classification
 * Crawl 9,749 images from the internet, crop the face by using [FaceMaskDetection](https://github.com/AIZOOTech/FaceMaskDetection) and divide into 2 classes:
     * `0` - Non-occluded face
     * `1` - Occluded face
-<div align=center>
+<div align="center">
     <img src="images/non_occluded_face.png" width=70%, height=70%>
     <div>
         <strong>Figure 1: </strong>Non-occluded face example
     </div>
 </div>
 
-<div align=center>
+<div align="center">
     <img src="images/occluded_face.png" width=70%, height=70%>
     <div>
         <strong>Figure 2: </strong>Occluded face example
@@ -66,8 +64,8 @@ cd face-occlusion-classification
     ```
     python main.py --train-path face_occlusion/Train \
                    --val-path face_occlusion/Val \
-                   --save-dir weight/folder/you/want/to/save \
-                   --weight-name name_the_file.pt \
+                   --weight-dir path/weight/folder \
+                   --weight-name {name_the_file}.pt \
                    --mode train
     ```
 * In case you want to train the model from scratch, run the command below:
@@ -75,8 +73,8 @@ cd face-occlusion-classification
     ```
     python main.py --train-path face_occlusion/Train \
                    --val-path face_occlusion/Val \
-                   --save-dir weight/folder/you/want/to/save \
-                   --weight-name name_the_file.pt \
+                   --weight-dir path/weight/folder \
+                   --weight-name {name_the_file}.pt \
                    --pretrained 0 \
                    --mode train
     ```
@@ -91,10 +89,18 @@ cd face-occlusion-classification
 
     ```
     python main.py --test-path face_occlusion/Test \
-                   --csv predict_file.csv \
-                   --save-dir saved/weight/folder \
-                   --weight-name weight_file.pt \
+                   --csv {predict_file}.csv \
+                   --weight-dir path/weight/folder \
+                   --weight-name {weight_file}.pt \
                    --mode test
+    ```
+* Test single image
+
+    ```
+    python main.py --image-path path/to/your/image \
+                   --weight-dir path/weight/folder \
+                   --weight-name {weight_file}.pt \
+                   --mode image
     ```
 
 ### **Note:** 
