@@ -77,6 +77,7 @@ class Run():
 
                 step_loss = self.critetion(outputs, targets)
                 step_loss.backward()
+                self.optimizer.step()
 
                 probability = torch.softmax(outputs.data, 1)
                 _, predicts = torch.max(probability.data, 1)
