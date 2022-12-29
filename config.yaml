@@ -1,0 +1,16 @@
+model: densenet169
+
+# Optimzer
+learning_rate: 1.e-3
+weight_decay: 0.0
+momentum: 0.0
+
+num_class: 2
+batch_size: 16
+epochs: 20
+
+input_size: [224, 224]
+
+# Transform
+mean: [0.485, 0.456, 0.406]
+std: [0.229, 0.224, 0.225]
