@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from run import Run
+from train_val_test import Run
 
 parser = ArgumentParser(description='Face occlusion')
 
