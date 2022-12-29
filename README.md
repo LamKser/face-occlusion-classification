@@ -17,7 +17,7 @@ git clone https://github.com/LamKser/face-occlusion-classification.git
 cd face-occlusion-classification
 ```
 
-### **1.1 :books: Dataset** 
+### **:books: Dataset** 
 
 * Crawl 9,749 images from the internet, crop the face by using [FaceMaskDetection](https://github.com/AIZOOTech/FaceMaskDetection) and divide into 2 classes:
     * `0` - Non-occluded face
@@ -60,7 +60,7 @@ cd face-occlusion-classification
     ```
 * :link: Data link: [face occlusion dataset](https://drive.google.com/file/d/1bhvyVwhNGhrojxEXdSPAEX6-3dPTXg95/view?usp=share_link)
 
-### **1.2 :building_construction: Train model**
+### **:building_construction: Train model**
 * Use the pretrained DenseNet169 Model (default):
 
     ```
@@ -86,7 +86,7 @@ cd face-occlusion-classification
     ```
     tensorboard --logdir logger
     ```
-### **1.3 :chart_with_upwards_trend: Test model**
+### **:chart_with_upwards_trend: Test model**
 * Test the model
 
     ```
