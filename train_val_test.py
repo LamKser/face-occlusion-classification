@@ -160,6 +160,7 @@ class Run():
             # Save best model
             if (train_accuracy > val_accuracy) and (val_accuracy > best_accuracy):
                 self.save_weight(epoch, save_dir, weight_name)
+                best_accuracy = val_accuracy
         
             # Save last model
             self.save_weight(epoch, save_dir, 'last_' + weight_name)
