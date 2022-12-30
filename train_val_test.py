@@ -201,7 +201,7 @@ class Run():
                 total_accuracy = total_accuracy + (predicts == targets).sum().item()
 
                 # Save to list
-                fnames.append(path.split('\\')[-1])
+                fnames.append(path)
                 labels.append(targets.data.cpu().numpy())
                 models.append(predicts.data.cpu().numpy())
 
@@ -209,7 +209,7 @@ class Run():
                     progress_bar.set_postfix(acc=f'{total_accuracy/total_data:.4f}')
             progress_bar.set_postfix(acc=f'{total_accuracy/total_data:.4f}')
         
-        df_test['fname'] = np.array([subname for fname in fnames for subname in fname])
+        df_test['fname'] = np.array([subname.split('\\')[-1] for fname in fnames for subname in fname])
         df_test['ground_truth'] = np.array([sublabel for label in labels for sublabel in label])
         df_test['predict'] = np.array([submodel for model in models for submodel in model])
 
