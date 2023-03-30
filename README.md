@@ -4,7 +4,7 @@
 ![Pandas](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)
 ![Python](https://img.shields.io/badge/Python_3.9-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
 
-[1]: https://drive.google.com/file/d/1bhvyVwhNGhrojxEXdSPAEX6-3dPTXg95/view?usp=share_link
+[1]: https://drive.google.com/file/d/1Mq_OZJLHiedpc9D7O40aNIbsvJM8rx39/view?usp=share_link
 
 # Face occlusion classification
 
@@ -56,7 +56,7 @@ cd face-occlusion-classification
         ├───1
         └───0
     ```
-* :link: Data link: [face occlusion dataset](https://drive.google.com/file/d/1bhvyVwhNGhrojxEXdSPAEX6-3dPTXg95/view?usp=share_link)
+* :link: Data link: [face occlusion dataset](https://drive.google.com/file/d/1Mq_OZJLHiedpc9D7O40aNIbsvJM8rx39/view?usp=share_link)
 
 ### **:building_construction: Train model**
 * Use the pretrained DenseNet169 Model (default):
