@@ -21,20 +21,25 @@ config = yaml.load(config_yaml_file, Loader=yaml.SafeLoader)
 
 class Run():
 
-    def __init__(self, pretrained: bool):
+    def __init__(self):
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.model = Model(config['model'], config['num_class'], pretrained).to(self.device)
-
+        self.model = Model(config['model'], config["train"]['num_class'], config["train"]["pretrain"]).to(self.device)
         self.optimizer = optim.SGD(self.model.parameters(),
-                                   lr=config['learning_rate'],
-                                   weight_decay=config['weight_decay'],
-                                   momentum=config['momentum']
+                                   lr=config["train"]['learning_rate'],
+                                   weight_decay=config["train"]['weight_decay'],
+                                   momentum=config["train"]['momentum']
         )
-        
         self.critetion = nn.CrossEntropyLoss().to(self.device)
-        self.data = LoadData(config['batch_size'], config['input_size'], 
+        self.data = LoadData(config["train"]['batch_size'], config["train"]['input_size'], 
                              config['mean'], config['std'])
+        
+        if not os.path.exists(config["save"]["path"]):
+            os.makedirs(
+                os.path.join(config["save"]["path"], config["model"])
+            )
+
+        self.wandb = config["wandb"]
         
         print(f'Using {self.device.type}')
 
@@ -134,16 +139,37 @@ class Run():
 
         return val_accuracy, val_loss
 
-    def train(self, train_path: str, val_path: str, save_dir: str, weight_name: str, logger_path: str):
+    def train(self):
         
         best_accuracy = 0
-        train_set = self.data.train_loader(train_path)
-        val_set = self.data.val_loader(val_path)
+        train_set = self.data.train_loader(config["data"]["train"])
+        val_set = self.data.val_loader(config["data"]["val"])
 
         # Create logger file (Tensorboard)
-        writer = SummaryWriter(logger_path)
-        epochs = config['epochs']
+        writer = SummaryWriter(
+            os.path.join(config["save"]["path"], config["save"]["logger"])
+        )
+        epochs = config["train"]['epochs']
         
+        # Init wandb project
+        if self.wandb["project"]:
+            import wandb
+
+            if self.wandb["resume_id"]:
+                id = self.wandb["resume_id"]
+                resume = 'allow'
+            else:
+                id = wandb.util.generate_id()
+                resume = 'never'
+
+            wb = wandb.init(
+                project=self.wandb["project"],
+                name=self.wandb["name"],
+                resume=resume,
+                id=id
+            )
+        
+        # Training
         for epoch in range(1, epochs + 1):
             train_accuracy, train_loss = self.train_one_epoch(str(f'{epoch}/{epochs}'), train_set)
             val_accuracy, val_loss = self.validate(str(f'{epoch}/{epochs}'), val_set)
@@ -156,29 +182,40 @@ class Run():
             writer.add_scalars('Accuracy', {'train': train_accuracy,
                                             'val': val_accuracy},
                                              epoch)
+            if self.wandb["project"]:
+                wb.log({
+                    "loss/train": train_loss,
+                    "loss/val": val_loss,
+                    "epoch": epoch
+                })
+                wb.log({
+                    "accuracy/train": train_accuracy,
+                    "accuracy/val": val_accuracy,
+                    "epoch": epoch
+                })
 
             # Save best model
-            if (train_accuracy > val_accuracy) and (val_accuracy > best_accuracy):
-                self.save_weight(epoch, save_dir, weight_name)
+            if val_accuracy > best_accuracy:
+                self.save_weight(epoch, config["save"]["path"], 
+                                 'best_' + config["save"]["weight"])
                 best_accuracy = val_accuracy
         
             # Save last model
-            self.save_weight(epoch, save_dir, 'last_' + weight_name)
+            self.save_weight(epoch, config["save"]["path"], 
+                             'last_' + config["save"]["weight"])
 
         writer.close()
 
-    def test(self, test_path: str, save_dir: str, weight_name: str, csv_file: str):
+    def test(self):
         
         # Saving predict results to csv
         df_test = pd.DataFrame(columns=['fname', 'ground_truth', 'predict'])
-        fnames = []
-        labels = []
-        models = []
+        fnames, labels, models  = list(), list(), list() 
 
-        test_set = self.data.test_loader(test_path)
+        test_set = self.data.test_loader(config["data"]["test"])
 
         # Load weight
-        self.load_weight(save_dir, weight_name)
+        self.load_weight(config["save"]["path"], config["save"]["weight"])
 
         with torch.set_grad_enabled(False):
             self.model.eval()
@@ -215,9 +252,10 @@ class Run():
         df_test['predict'] = np.array([submodel for model in models for submodel in model])
 
         df_test.sort_values(by=['fname'], inplace=True)
-        df_test.to_csv(csv_file, index=False)
 
-        print(f'Saved csv at {csv_file}')
+        save_path = os.path.join(config["save"]["path"], config["save"]["csv"])
+        df_test.to_csv(save_path, index=False)
+        print(f'Saved csv at {save_path}')
         
     def test_image(self, image_path, save_dir, weight_name):
 

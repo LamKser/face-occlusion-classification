@@ -3,19 +3,22 @@
 ![Numpy](https://img.shields.io/badge/Numpy-777BB4?style=for-the-badge&logo=numpy&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)
 ![Python](https://img.shields.io/badge/Python_3.9-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
+![Wandb](https://img.shields.io/badge/Weights_&_Biases-000000?style=for-the-badge&logo=WeightsAndBiases&logoColor=yellow)
 
 [1]: https://drive.google.com/file/d/1Mq_OZJLHiedpc9D7O40aNIbsvJM8rx39/view?usp=share_link
 
 # Face occlusion classification
 
-## **Phase 1:** Classify whether face is occluded or not
 
 ```
 git clone https://github.com/LamKser/face-occlusion-classification.git
 cd face-occlusion-classification
 ```
 
-### **:books: Dataset** 
+## :computer: **Hardware**
+* All the train and test processes are done on google colab with GPU Tesla T4
+
+## **:books: Dataset** 
 
 * Crawl 9,749 images from the internet, crop the face by using [FaceMaskDetection](https://github.com/AIZOOTech/FaceMaskDetection) and divide into 2 classes:
     * `0` - Non-occluded face
@@ -58,51 +61,47 @@ cd face-occlusion-classification
     ```
 * :link: Data link: [face occlusion dataset](https://drive.google.com/file/d/1Mq_OZJLHiedpc9D7O40aNIbsvJM8rx39/view?usp=share_link)
 
-### **:building_construction: Train model**
-* Use the pretrained DenseNet169 Model (default):
+## :triangular_ruler: **Config**
+* To use other model or change hyperparameters, you can edit `train.yml` and `test.yml` in `configs` folder
+* Available models: `densenet169`, `resnet18`, `resnet50`
 
-    ```
-    python main.py --train-path face_occlusion/Train \
-                   --val-path face_occlusion/Val \
-                   --weight-dir path/weight/folder \
-                   --weight-name {name_the_file}.pt \
-                   --mode train
-    ```
-* In case you want to train the model from scratch, run the command below:
 
+## **:building_construction: Train model**
+* Train
     ```
-    python main.py --train-path face_occlusion/Train \
-                   --val-path face_occlusion/Val \
-                   --weight-dir path/weight/folder \
-                   --weight-name {name_the_file}.pt \
-                   --pretrained 0 \
-                   --mode train
+    python train.py --opt configs/train.yml
     ```
 
 * Show the training and validation progress
-
     ```
     tensorboard --logdir logger
     ```
-### **:chart_with_upwards_trend: Test model**
+
+* If using `wandb` to log training process:
+    ```
+    wandb:
+        project: <Type your project>
+        name: <Type experiment name>
+    ```
+    
+## **:chart_with_upwards_trend: Test model**
 * Test the model
 
     ```
-    python main.py --test-path face_occlusion/Test \
-                   --csv {predict_file}.csv \
-                   --weight-dir path/weight/folder \
-                   --weight-name {weight_file}.pt \
-                   --mode test
+    python test.py --opt configs/test.yml
     ```
 * Test single image
 
     ```
-    python main.py --image-path path/to/your/image \
-                   --weight-dir path/weight/folder \
-                   --weight-name {weight_file}.pt \
-                   --mode image
+    python test_single_image.py --model <model_name> --weight <weight_path> --image <image_path>
     ```
+## :bar_chart: **Results** (Train/Val/Test)
+* All the trained model: [trained model]()
+* Results: [Results.md](Results.md)
 
-### **Note:** 
-* To use other model or change some parameters, you can edit in `config.yaml`
-* Other model: resnet18, resnet50
+                          
+
+
+<!-- https://pytorch.org/vision/stable/models.html -->
+<!-- https://www.w3schools.com/icons/tryit.asp?filename=tryicons_fa-close -->
+<!-- https://www.w3schools.com/icons/tryit.asp?filename=tryicons_fa-check -->
