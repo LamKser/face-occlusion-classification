@@ -88,7 +88,7 @@ cd face-occlusion-classification
 * Test the model
 
     ```
-    python test.py --opt configs/test.yml
+    python test_model.py --opt configs/test.yml
     ```
 * Test single image
 

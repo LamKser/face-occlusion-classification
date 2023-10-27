@@ -16,7 +16,8 @@ class Train:
     def __init__(self, config) -> None:
 
         # Load config
-        self.config = yaml.load(config, Loader=yaml.SafeLoader)
+        fyml = open(config, 'r')
+        self.config = yaml.load(fyml, Loader=yaml.SafeLoader)
         self.save = self.config["save"]
         self.data = self.config["data"]
 
@@ -44,8 +45,8 @@ class Train:
             os.makedirs(self.save_dir)
 
         # Data
-        data = LoadData(self.data['batch_size'], 
-                        self.data['input_size'], 
+        data = LoadData(self.config["train"]['batch_size'], 
+                        self.data['size'], 
                         self.data['mean'], 
                         self.data['std'])
 
@@ -195,5 +196,4 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--opt", type=str, help='Enter train config yaml')
     args = parser.parse_args()
-
     train = Train(args.opt).train()
