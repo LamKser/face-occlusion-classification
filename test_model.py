@@ -58,7 +58,7 @@ class Test:
                 probs = torch.softmax(outputs.data, 1)
                 _, preds_ = torch.max(probs.data, 1)
 
-                accuracy = accuracy + (outputs == targets).sum().item()
+                accuracy = accuracy + (preds_ == targets).sum().item()
 
                 # Write to data frame
                 fnames.append(path)

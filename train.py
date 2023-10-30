@@ -83,7 +83,7 @@ class Train:
     def __train_one_epoch(self, epoch):
         with torch.set_grad_enabled(True):
             self.model.train()
-            loss, accuracy = 0, 0
+            loss, accuracy, total_data = 0, 0, len(self.train_data.dataset)
 
             # Progress bar
             progress_bar = tqdm(enumerate(self.train_data, start = 1),
@@ -107,17 +107,16 @@ class Train:
 
                 loss = loss + loss_.item()
                 accuracy = accuracy + (preds == targets).sum().item()
-
                 if step % 200:
-                    progress_bar.set_postfix(acc=f'{accuracy / step:.4f}', loss=f'{loss / step:.4f}')
-            progress_bar.set_postfix(acc=f'{accuracy / step :.4f}', loss=f'{loss / step:.4f}')
+                    progress_bar.set_postfix(acc=f'{accuracy / total_data:.4f}', loss=f'{loss / step:.4f}')
+            progress_bar.set_postfix(acc=f'{accuracy / total_data :.4f}', loss=f'{loss / step:.4f}')
 
-        return accuracy / step, loss / step
+        return accuracy / total_data, loss / step
 
     def __validation(self, epoch):
         with torch.set_grad_enabled(False):
-            self.model.val()
-            loss, accuracy = 0, 0
+            self.model.eval()
+            loss, accuracy, total_data = 0, 0, len(self.val_data.dataset)
             progress_bar = tqdm(enumerate(self.val_data, start = 1),
                                 total=len(self.val_data),
                                 bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'
@@ -137,12 +136,11 @@ class Train:
                 # Calculate loss and accuracy
                 loss = loss + loss_.item()
                 accuracy = accuracy + (preds == targets).sum().item()
-
                 if step % 200:
-                    progress_bar.set_postfix(acc=f'{accuracy / step:.4f}', loss=f'{loss / step:.4f}')
-            progress_bar.set_postfix(acc=f'{accuracy / step :.4f}', loss=f'{loss / step:.4f}')
+                    progress_bar.set_postfix(acc=f'{accuracy / total_data:.4f}', loss=f'{loss / step:.4f}')
+            progress_bar.set_postfix(acc=f'{accuracy / total_data :.4f}', loss=f'{loss / step:.4f}')
 
-        return accuracy / step, loss / step
+        return accuracy / total_data, loss / step
     
     def train(self):
         best_acc = 0
@@ -184,8 +182,9 @@ class Train:
 
             # Save model
             if val_acc > best_acc:
-                save_weight(self.model, epoch, self.save_dir, "best_" + self.save["weight"])
-                best_acc = val_acc
+              print("Save best model at epoch", epoch)
+              save_weight(self.model, epoch, self.save_dir, "best_" + self.save["weight"])
+              best_acc = val_acc
         save_weight(self.model, epoch, self.save_dir, "last_" + self.save["weight"])
         self.writer.close()
 
@@ -197,3 +196,4 @@ if __name__ == "__main__":
     parser.add_argument("--opt", type=str, help='Enter train config yaml')
     args = parser.parse_args()
     train = Train(args.opt).train()
+    
