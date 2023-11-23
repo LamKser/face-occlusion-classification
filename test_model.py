@@ -14,24 +14,25 @@ from utils import load_weight
 
 class Test:
     def __init__(self, config):
-        self.config = yaml.load(config, Loader=yaml.SafeLoader)
+        fyml = open(config, 'r')
+        self.config = yaml.load(fyml, Loader=yaml.SafeLoader)
         self.data = self.config["data"]
 
         # model
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         model = Model(self.config['model'], 
-                           self.config["train"]['num_class'], 
-                           self.config["train"]["pretrain"]).to(self.device)
+                           self.data['num_class'], 
+                           False).to(self.device)
         self.model = load_weight(model, self.config["weight"])
-
+        # print(self.model)
         # save path
-        self.save_results = join(self.config["path"], self.config["model"])
+        self.save_results = join(self.config["save"]["path"], self.config["model"])
         if not os.path.exists(self.save_results):
             os.makedirs(self.save_results)
 
         # test data
         data = LoadData(self.data['batch_size'], 
-                        self.data['input_size'], 
+                        self.data['size'], 
                         self.data['mean'],
                         self.data['std'])
 
@@ -44,8 +45,8 @@ class Test:
         with torch.set_grad_enabled(False):
             self.model.eval()
             accuracy = 0
-            progress_bar = tqdm(enumerate(self.test_set, start = 1),
-                                total=len(self.test_set),
+            progress_bar = tqdm(enumerate(self.test_data, start = 1),
+                                total=len(self.test_data),
                                 bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}',
                                 desc='Testing'
                             )
@@ -57,7 +58,7 @@ class Test:
 
                 probs = torch.softmax(outputs.data, 1)
                 _, preds_ = torch.max(probs.data, 1)
-
+                
                 accuracy = accuracy + (preds_ == targets).sum().item()
 
                 # Write to data frame
@@ -74,7 +75,7 @@ class Test:
 
         df.sort_values(by=['fname'], inplace=True)
 
-        save_path = join(self.save_results, self.config["model"])
+        save_path = join(self.save_results, self.config["model"] + ".csv")
         df.to_csv(save_path, index=False)
 
         print("Results saved at:", save_path)
