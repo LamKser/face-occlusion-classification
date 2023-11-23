@@ -41,7 +41,7 @@ class Train:
         )
         # Create save dir
         self.save_dir = join(self.save["path"], self.config["model"])
-        if not os.path.exists(self.save["path"]):
+        if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
 
         # Data

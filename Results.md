@@ -25,10 +25,10 @@
     </tr>
     <tr align="center">
         <td><img src="images/accept_icon.png" height="15"></td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
+        <td>0.9805</td>
+        <td>0.981</td>
+        <td>0.9789</td>
+        <td>0.9799</td>
         <td><a href="https://drive.google.com/file/d/11g4Qdyt-dsjc-9ahDWKpLII3CKzGeKiE/view?usp=sharing">link</a></td>
     </tr>
     <tr align="center">
@@ -61,11 +61,11 @@
     </tr>
     <tr align="center">
         <td><img src="images/accept_icon.png" height="15"></td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>link</td>
+        <td>0.9734</td>
+        <td>0.9746</td>
+        <td>0.9705</td>
+        <td>0.9725</td>
+        <td><a href="https://drive.google.com/file/d/11P9hmqoUgCzCYtrrmoJTZC30PxxUF6ln/view?usp=sharing">link</a></td>
     </tr>
     <tr align="center">
         <td  align="left" rowspan=2>VGG19-BN</td>
@@ -79,11 +79,11 @@
     </tr>
     <tr align="center">
         <td><img src="images/accept_icon.png" height="15"></td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>link</td>
+        <td>0.9713</td>
+        <td>0.9765</td>
+        <td>0.9642</td>
+        <td>0.9703</td>
+        <td><a href="https://drive.google.com/file/d/11cAzmekS32dSOGIMiogq2m0cc7BQ903u/view?usp=drive_link">link</a></td>
     </tr>
     <tr align="center">
         <td  align="left" rowspan=2>DenseNet169</td>
