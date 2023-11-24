@@ -9,7 +9,7 @@ import torch
 
 from data_loader import LoadData
 from model import Model
-from utils import save_weight
+from utils import save_weight, resume_train
 
 
 class Train:
@@ -20,6 +20,7 @@ class Train:
         self.config = yaml.load(fyml, Loader=yaml.SafeLoader)
         self.save = self.config["save"]
         self.data = self.config["data"]
+        
 
         # Model
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -146,8 +147,16 @@ class Train:
         best_acc = 0
         epochs = self.config["train"]["epochs"]
 
+        # Resume train
+        if self.config["train"]["resume"]:
+            self.model, start_epoch = resume_train(self.model, self.config["train"]["resume"])
+            start_epoch += 1
+            print(f"Resume training from epoch {start_epoch}")
+        else:
+            start_epoch = 1
+
         # Train
-        for epoch in range(1, epochs + 1):
+        for epoch in range(start_epoch, epochs + 1):
             train_acc, train_loss = self.__train_one_epoch(f"{epoch}/{epochs}")
             val_acc, val_loss = self.__validation(f"{epoch}/{epochs}")
 

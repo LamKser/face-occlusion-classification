@@ -10,11 +10,19 @@ def save_weight(model, epoch, save_dir, file):
                 join(save_dir, file))
     
 
-def load_weight(model, file, show = True):
+def load_weight(model, file, show=True):
     checkpoints = load(file)
     if show: print("Model at epoch:", checkpoints["epoch"])
     model.load_state_dict(checkpoints["state_dict"])
     return model
+
+
+def resume_train(model, weight):
+    checkpoints = load(weight)
+    epoch = checkpoints["epoch"]
+    model.load_state_dict(checkpoints["state_dict"])
+    return model, epoch
+
 
 
 def get_pretrained(name):
