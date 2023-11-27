@@ -124,10 +124,10 @@
     <tr align="center">
         <td  align="left">ConvNeXt-Tiny</td>
         <td>-.--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td><a href="">link</a></td>
+        <td>0.9867</td>
+        <td>0.9832</td>
+        <td>0.9894</td>
+        <td>0.9863</td>
+        <td><a href="https://drive.google.com/file/d/10rCsarUFijUzz3roSN1bi5-mfz_37c2o/view?usp=sharing">link</a></td>
     </tr>
 </table>

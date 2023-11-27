@@ -60,6 +60,10 @@ class Train:
         self.wandb_status = False
         if wandb_["project"]:
             import wandb
+            wandb.login(
+                key="54ca6709c82010cf5cded58108cae44d946e6063",
+                relogin=True
+            )
             self.wandb_status = True
 
             if wandb_["resume_id"]:
