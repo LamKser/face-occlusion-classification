@@ -115,11 +115,11 @@
     <tr align="center">
         <td  align="left">ConvNeXt-Small</td>
         <td>-.--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td><a href="">link</a></td>
+        <td>0.9887</td>
+        <td>0.9853</td>
+        <td>0.9915</td>
+        <td>0.9884</td>
+        <td><a href="https://drive.google.com/file/d/1-BONvtmHbzxgoJvgxQ1Nt442iIWvZU0Z/view?usp=drive_link">link</a></td>
     </tr>
     <tr align="center">
         <td  align="left">ConvNeXt-Tiny</td>
