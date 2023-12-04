@@ -1,0 +1,14 @@
+model_list:
+  VGG16: "weights/last_vgg16.pth"
+  VGG19: "weights/last_vgg19.pth"
+  VGG16-BN: "weights/last_vgg16_bn.pth"
+  VGG19-BN: "weights/last_vgg19_bn.pth"
+  DenseNet169: "weights/last_densenet169.pth"
+  ConvNeXt-Base: "weights/last_convnext_base.pth"
+  ConvNeXt-Small: "weights/last_convnext_small.pth"
+  ConvNeXt-Tiny: "weights/last_convnext_tiny.pth"
+
+data:
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  size: [224, 224]

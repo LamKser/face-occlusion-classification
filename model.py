@@ -9,7 +9,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 class Model(nn.Module):
 
-    def __init__(self, name: str, num_class: int, pretrained: bool = False):
+    def __init__(self, name: str, num_class: int, pretrained: bool = False, is_train: bool = True):
         super(Model, self).__init__()
         
         self.model = get_model(name, pretrained)
@@ -27,7 +27,7 @@ class Model(nn.Module):
         elif "convnext" in name:
             in_features = self.model.classifier[2].in_features
             self.model.classifier[2] = nn.Linear(in_features, num_class)
-        print(f'Model: {name}')
+        if is_train: print(f'Model: {name}')
 
     def forward(self, x):
         return self.model(x)
