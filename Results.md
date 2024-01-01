@@ -2,20 +2,23 @@
 * All the trained model: [trained model](https://drive.google.com/drive/folders/1-Dy6xcKH9D5YBeYCav_PZyJwYeZPSnuq?usp=sharing)
 * The pretrained models are trained with **30 epochs**
 
+## Last model
 <table border>
     <tr align="center">
         <th align="left">Model</th>
         <!-- <th>Pretrained?</th> -->
         <th>Params (M)</th>
+        <th>Infer (ms)</th>
         <th>Accuracy</th>
-        <th>Prec</th>
-        <th>Rec</th>
+        <th>Precision</th>
+        <th>Recall</th>
         <th>F1</th>
         <th>Weights</th>
     </tr>
     <tr align="center">
         <td align="left">VGG16</td>
-        <td>-.--</td>
+        <td>134.2</td>
+        <td>7.76</td>
         <td>0.9805</td>
         <td>0.981</td>
         <td>0.9789</td>
@@ -24,7 +27,8 @@
     </tr>
     <tr align="center">
         <td  align="left">VGG19</td>
-        <td>-.--</td>
+        <td>139.5</td>
+        <td>9.36</td>
         <td>0.9836</td>
         <td>0.9831</td>
         <td>0.9831</td>
@@ -33,7 +37,8 @@
     </tr>
     <tr align="center">
         <td  align="left">VGG16-BN</td>
-        <td>-.--</td>
+        <td>134.2</td>
+        <td>8.3</td>
         <td>0.9734</td>
         <td>0.9746</td>
         <td>0.9705</td>
@@ -42,7 +47,8 @@
     </tr>
     <tr align="center">
         <td  align="left">VGG19-BN</td>
-        <td>-.--</td>
+        <td>139.5</td>
+        <td>10.01</td>
         <td>0.9713</td>
         <td>0.9765</td>
         <td>0.9642</td>
@@ -51,7 +57,8 @@
     </tr>
     <tr align="center">
         <td  align="left">DenseNet169</td>
-        <td>-.--</td>
+        <td>12.4</td>
+        <td>25.46</td>
         <td>0.9795</td>
         <td>0.9729</td>
         <td>0.9852</td>
@@ -60,43 +67,48 @@
     </tr>
     <tr align="center">
         <td  align="left">DenseNet201</td>
-        <td>-.--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td><a href="">link</a></td>
+        <td>18</td>
+        <td>31.06</td>
+        <td>0.9744</td>
+        <td>0.9787</td>
+        <td>0.9684</td>
+        <td>0.9735</td>
+        <td><a href="https://drive.google.com/file/d/11p-_fr8a1EudS3g-IgGIsjPncUe1zMk4/view?usp=drive_link">link</a></td>
     </tr>
     <tr align="center">
-        <td  align="left">ResNet18</td>
-        <td>-.--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td><a href="">link</a></td>
+        <td align="left">ResNet18</td>
+        <td>11.1</td>
+        <td>3.69</td>
+        <td>0.9703</td>
+        <td>0.9665</td>
+        <td>0.9726</td>
+        <td>0.9695</td>
+        <td><a href="https://drive.google.com/file/d/10FmUWT0pAU3_Mwl7-eBadKM4xy75AEDi/view?usp=drive_link">link</a></td>
     </tr>
     <tr align="center">
         <td  align="left">ResNet50</td>
-        <td>-.--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td><a href="">link</a></td>
+        <td>23.5</td>
+        <td>7.15</td>
+        <td>0.9754</td>
+        <td>0.9787</td>
+        <td>0.9705</td>
+        <td>0.9746</td>
+        <td><a href="https://drive.google.com/file/d/11n6KxAxIRdCgoKlIJsUjLsiHC-aOs1i6/view?usp=drive_link">link</a></td>
     </tr>
     <tr align="center">
         <td  align="left">ResNet152</td>
-        <td>-.--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td><a href="">link</a></td>
+        <td>58.1</td>
+        <td>19.31</td>
+        <td>0.9805</td>
+        <td>0.983</td>
+        <td>0.9768</td>
+        <td>0.9799</td>
+        <td><a href="https://drive.google.com/file/d/10U27HvjHvbMPHZIuvT4rxuxuNDu1Mdkd/view?usp=drive_link">link</a></td>
     </tr>
     <tr align="center">
         <td  align="left">ConvNeXt-Base</td>
-        <td>-.--</td>
+        <td>87.5</td>
+        <td>13.26</td>
         <td>0.9867</td>
         <td>0.9894</td>
         <td>0.9831</td>
@@ -104,17 +116,9 @@
         <td><a href="https://drive.google.com/file/d/1R_HF1Psv3qji10uMbPyd8OnTR9SGor3J/view?usp=drive_link">link</a></td>
     </tr>
     <tr align="center">
-        <td  align="left">ConvNeXt-Large</td>
-        <td>-.--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td><a href="">link</a></td>
-    </tr>
-    <tr align="center">
         <td  align="left">ConvNeXt-Small</td>
-        <td>-.--</td>
+        <td>49.4</td>
+        <td>11.54</td>
         <td>0.9887</td>
         <td>0.9853</td>
         <td>0.9915</td>
@@ -123,7 +127,8 @@
     </tr>
     <tr align="center">
         <td  align="left">ConvNeXt-Tiny</td>
-        <td>-.--</td>
+        <td>27.8</td>
+        <td>7.24</td>
         <td>0.9867</td>
         <td>0.9832</td>
         <td>0.9894</td>

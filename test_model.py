@@ -41,6 +41,13 @@ class Test:
     def test(self):
         df = pd.DataFrame(columns=['fname', 'labels', 'preds'])
         fnames, labels, preds = list(), list(), list()
+        time_infer = list()
+
+        # Warm-up model
+        dummy_input = torch.randn(1, 3, 224, 224, dtype=torch.float).to(self.device)
+        starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+        for _ in range(10):
+          _ = self.model(dummy_input)
 
         with torch.set_grad_enabled(False):
             self.model.eval()
@@ -54,7 +61,15 @@ class Test:
             # test
             for step, (path, imgs, targets) in progress_bar:
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
+                
+                # Measure time inference
+                starter.record()
                 outputs = self.model(imgs)
+                ender.record()
+                # WAIT FOR GPU SYNC
+                torch.cuda.synchronize(device=self.device)
+                curr_time = starter.elapsed_time(ender)
+                time_infer.append(curr_time)
 
                 probs = torch.softmax(outputs.data, 1)
                 _, preds_ = torch.max(probs.data, 1)
@@ -77,9 +92,9 @@ class Test:
 
         save_path = join(self.save_results, self.config["model"] + ".csv")
         df.to_csv(save_path, index=False)
-
         print("Results saved at:", save_path)
-        
+        print("Time inference:", np.mean(np.array(time_infer)), "(ms)")
+        print(f"Number of paremeters: {sum(p.numel() for p in self.model.parameters()):,}")
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
