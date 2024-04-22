@@ -1,20 +1,19 @@
-[![Google Drive](https://img.shields.io/badge/Google%20Drive-00897B?style=for-the-badge&logo=google-drive&logoColor=white)][1]
+[![Kaggle](https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=Kaggle&logoColor=white)][1]
 ![Pytorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white)
 ![Numpy](https://img.shields.io/badge/Numpy-777BB4?style=for-the-badge&logo=numpy&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)
 ![Python](https://img.shields.io/badge/Python_3.9-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
 ![Wandb](https://img.shields.io/badge/Weights_&_Biases-000000?style=for-the-badge&logo=WeightsAndBiases&logoColor=yellow)
 
-[1]: https://drive.google.com/file/d/1Mq_OZJLHiedpc9D7O40aNIbsvJM8rx39/view?usp=share_link
+[1]: https://www.kaggle.com/datasets/dinhhoanglam/face-occlusion
 
 # Face occlusion classification
-
 
 ```
 git clone https://github.com/LamKser/face-occlusion-classification.git
 cd face-occlusion-classification
 ```
-
+* Tensorflow implement [here]()
 ## :computer: **Hardware**
 * All the train and test processes are done on google colab with GPU Tesla T4
 
