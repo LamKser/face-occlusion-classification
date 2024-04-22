@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     parser.add_argument("--model", type=str, required=True, 
-                      help="Model name (resnet | densenet | vgg | )")
+                      help="Model name (vgg16 | vgg19 | vgg16_bn | vgg19_bn | densenet169 | densenet201 | resnet18 | resnet50 | resnet152 | convnext_base | convnext_large | convnext_small | convnext_tiny)")
     parser.add_argument("--weight", type=str, required=True,
                       help='Weight of model ({"state_dict":"", "epoch": ""})')
     parser.add_argument("--save", type=str, default="onnx/model.onnx",
