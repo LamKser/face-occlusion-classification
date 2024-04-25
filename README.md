@@ -4,6 +4,7 @@
 ![Pandas](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)
 ![Python](https://img.shields.io/badge/Python_3.9-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
 ![Wandb](https://img.shields.io/badge/Weights_&_Biases-000000?style=for-the-badge&logo=WeightsAndBiases&logoColor=yellow)
+![Anaconda](https://img.shields.io/badge/Anaconda-%2344A833.svg?style=for-the-badge&logo=anaconda&logoColor=white)
 
 [1]: https://www.kaggle.com/datasets/dinhhoanglam/face-occlusion
 
@@ -14,8 +15,12 @@ git clone https://github.com/LamKser/face-occlusion-classification.git
 cd face-occlusion-classification
 ```
 <!-- * Tensorflow implement [here]() -->
-## :computer: **Hardware**
+## :computer: **Hardware & Environment** 
 * All the train and test processes are done on google colab with GPU Tesla T4
+    ```
+    conda env create -f environment.yml
+    conda activate face-occlusion
+    ```
 
 ## **:books: Dataset** 
 
