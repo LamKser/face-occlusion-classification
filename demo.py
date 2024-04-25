@@ -11,7 +11,7 @@ from utils import load_weight
 
 
 # Configs
-with open("demo_configs.yml") as f:
+with open("configs/demo_configs.yml") as f:
     confis = yaml.load(f, Loader=yaml.SafeLoader)
 
 CLASSES = {0: "non-occluded",
