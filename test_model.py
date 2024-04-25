@@ -6,10 +6,21 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 import torch
+from sklearn.metrics import (accuracy_score, 
+                             f1_score, 
+                             precision_score, 
+                             recall_score)
 
 from data_loader import LoadData
 from model import Model
 from utils import load_weight
+
+def eval(results):
+    print('*' * 20 + "Evaluate model" + '*' * 20)
+    print("Accuracy:", accuracy_score(results["labels"], results["preds"]))
+    print("Precision:", precision_score(results["labels"], results["preds"]))
+    print("Recall:", recall_score(results["labels"], results["preds"]))
+    print("F1:", f1_score(results["labels"], results["preds"]))
 
 
 class Test:
@@ -95,6 +106,7 @@ class Test:
         print("Results saved at:", save_path)
         print("Time inference:", np.mean(np.array(time_infer)), "(ms)")
         print(f"Number of paremeters: {sum(p.numel() for p in self.model.parameters()):,}")
+        eval(df)
 
 if __name__ == "__main__":
     from argparse import ArgumentParser

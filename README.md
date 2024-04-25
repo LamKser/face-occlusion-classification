@@ -87,7 +87,7 @@ cd face-occlusion-classification
         project: <Type your project>
         name: <Type experiment name>
     ```
-    
+
 ## **:chart_with_upwards_trend: Test model**
 * Test the model
 
