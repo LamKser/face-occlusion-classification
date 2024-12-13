@@ -63,7 +63,7 @@ cd face-occlusion-classification
         ├───1
         └───0
     ```
-* :link: Data link: [face occlusion dataset](https://drive.google.com/file/d/1Mq_OZJLHiedpc9D7O40aNIbsvJM8rx39/view?usp=share_link)
+* :link: Data link: [face occlusion dataset](https://www.kaggle.com/datasets/dinhhoanglam/face-occlusion)
 
 ## :triangular_ruler: **Config**
 * To use other model or change hyperparameters, you can edit `train.yml` and `test.yml` in `configs` folder
