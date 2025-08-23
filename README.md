@@ -114,7 +114,7 @@ cd face-occlusion-classification
         python onnx/run_onnx.py --onnx <onnx file> --img <your image>
         ```
 ## :bar_chart: **Results** (Train/Val/Test)
-* All the trained model: [trained model](https://drive.google.com/drive/folders/1-Dy6xcKH9D5YBeYCav_PZyJwYeZPSnuq?usp=sharing)
+* All the trained model: [trained model](https://www.kaggle.com/datasets/dinhhoanglam/face-occlusion-checkpoint)
 * The pretrained models are trained with **30 epochs**
 
 ## Last model
