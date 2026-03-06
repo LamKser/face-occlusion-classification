@@ -3,7 +3,9 @@
 # densenet169 | densenet201
 # resnet18 | resnet50 | resnet152
 # convnext_base | convnext_large | convnext_small | convnext_tiny
-model: vgg19
+model: 
+  name: densenet169
+  classifier: softmax # softmax, sigmoid
 
 data:
   # mean ,std & size from ImageNet pretrain
@@ -11,8 +13,8 @@ data:
   std: [0.229, 0.224, 0.225]
   size: [224, 224]
 
-  train: data/face_occlusion/Train
-  val: data/face_occlusion/Val
+  train: drafts/data/face_occlusion/Train
+  val: drafts/data/face_occlusion/Val
 
 train:
   pretrain: true

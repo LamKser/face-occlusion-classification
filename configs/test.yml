@@ -3,7 +3,9 @@
 # densenet169 | densenet201
 # resnet18 | resnet50 | resnet152
 # convnext_base | convnext_large | convnext_small | convnext_tiny
-model: densenet169
+model: 
+  name: densenet169
+  classifier: softmax # softmax, sigmoid
 
 data:
   # mean ,std & size from ImageNet pretrain
