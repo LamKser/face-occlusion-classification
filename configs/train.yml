@@ -4,7 +4,7 @@
 # resnet18 | resnet50 | resnet152
 # convnext_base | convnext_large | convnext_small | convnext_tiny
 model: 
-  name: densenet169
+  name: vgg19
   classifier: softmax # softmax, sigmoid
 
 data:
@@ -29,8 +29,8 @@ train:
   epochs: 20
 
 save:
-  path: experiment
-  weight: densenet169.pth
+  path: experiment/test
+  weight: vgg19.pth
   logger: logger
 
 

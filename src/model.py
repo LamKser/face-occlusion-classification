@@ -1,18 +1,24 @@
 from torch import nn
 from PIL import ImageFile
 
-from utils import get_model
+from src.utils import get_model
 
 
-ImageFile.LOAD_TRUNCATED_IMAGES = True
+ImageFile.LOAD_TRUNCATED_IMAGES = True # Solved "OSError: image file is truncated"
 
 
 class Model(nn.Module):
 
-    def __init__(self, name: str, num_class: int, pretrained: bool = False, is_train: bool = True):
+    def __init__(self, name: str, num_class: int, pretrained: bool = False):
         super(Model, self).__init__()
         
+        #  Show logging
+        print("Model name:", name)
+        print("Number of output:", num_class)
+        print(f"Using pretrained \"{name}\":", pretrained)
+
         self.model = get_model(name, pretrained)
+        self.num_class = num_class
 
         # Change the number of class
         if 'resnet' in name:
@@ -27,8 +33,7 @@ class Model(nn.Module):
         elif "convnext" in name:
             in_features = self.model.classifier[2].in_features
             self.model.classifier[2] = nn.Linear(in_features, num_class)
-        if is_train: print(f'Model: {name}')
-
+    
     def forward(self, x):
         return self.model(x)
 

@@ -7,41 +7,46 @@ from torch.utils.tensorboard import SummaryWriter
 from torch import nn, optim
 import torch
 
-from data_loader import LoadData
-from model import Model
-from utils import save_weight, resume_train
+from src.data.loader import LoadData
+from src.model import Model
+from src.utils import save_weight, resume_train
 
 
-class Train:
-    def __init__(self, config) -> None:
+class TrainModel:
+    def __init__(self, config):
 
         # Load config
-        fyml = open(config, 'r')
-        self.config = yaml.load(fyml, Loader=yaml.SafeLoader)
+        # with open(config_path, 'r') as f:
+        #     self.config = yaml.load(f, Loader=yaml.SafeLoader)
+        self.config = config
         self.save = self.config["save"]
         self.data = self.config["data"]
-        
 
         # Model
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.model = Model(self.config['model'], 
+        print("Device:", self.device)
+
+        if (self.config['model']["classifier"] == "sigmoid") \
+            and (self.config["train"]['num_class'] != 1):
+            self.config["train"]['num_class'] = 1
+
+        self.model = Model(self.config['model']["name"], 
                            self.config["train"]['num_class'], 
                            self.config["train"]["pretrain"]).to(self.device)
         
-        # Todo: Add logging
-        # ...
-        # ...
-        # ...
-        # ...
+        # Loss function
+        if self.config['model']["classifier"] == "softmax":
+            self.critetion = nn.CrossEntropyLoss().to(self.device)
+        elif self.config['model']["classifier"] == "sigmoid":
+            self.critetion = nn.BCEWithLogitsLoss().to(self.device)
 
-        self.critetion = nn.CrossEntropyLoss().to(self.device)
         self.optimizer = optim.SGD(self.model.parameters(),
                                    lr = self.config["train"]['learning_rate'],
                                    weight_decay = self.config["train"]['weight_decay'],
                                    momentum = self.config["train"]['momentum']
         )
         # Create save dir
-        self.save_dir = join(self.save["path"], self.config["model"])
+        self.save_dir = join(self.save["path"], self.config["model"]["name"])
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
 
@@ -51,8 +56,8 @@ class Train:
                         self.data['mean'], 
                         self.data['std'])
 
-        self.train_data = data.train_loader(self.data["train"])
-        self.val_data = data.val_loader(self.data["val"])
+        self.train_data = data.load_data(self.data["train"], "train")
+        self.val_data = data.load_data(self.data["val"], "val")
 
         # Init wandb & tensorboard
         # wandb
@@ -101,13 +106,16 @@ class Train:
                 self.optimizer.zero_grad()
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
                 outputs = self.model(imgs)
-
                 loss_ = self.critetion(outputs, targets)
                 loss_.backward()
                 self.optimizer.step()
 
-                probs = torch.softmax(outputs.data, 1)
-                _, preds = torch.max(probs.data, 1)
+                if self.config['model']["classifier"] == "softmax":
+                    probs = torch.softmax(outputs.data, 1)
+                    _, preds = torch.max(probs.data, 1)
+                elif self.config['model']["classifier"] == "sigmoid":
+                    probs = torch.sigmoid(outputs)
+                    preds = probs.round()
 
                 loss = loss + loss_.item()
                 accuracy = accuracy + (preds == targets).sum().item()
@@ -134,8 +142,12 @@ class Train:
 
                 loss_ = self.critetion(outputs, targets)
 
-                probs = torch.softmax(outputs.data, 1)
-                _, preds = torch.max(probs.data, 1)
+                if self.config['model']["classifier"] == "softmax":
+                    probs = torch.softmax(outputs.data, 1)
+                    _, preds = torch.max(probs.data, 1)
+                elif self.config['model']["classifier"] == "sigmoid":
+                    probs = torch.sigmoid(outputs)
+                    preds = probs.round()
                 
                 # Calculate loss and accuracy
                 loss = loss + loss_.item()
@@ -201,11 +213,11 @@ class Train:
         self.writer.close()
 
 
-if __name__ == "__main__":
-    from argparse import ArgumentParser
+# if __name__ == "__main__":
+#     from argparse import ArgumentParser
 
-    parser = ArgumentParser()
-    parser.add_argument("--opt", type=str, help='Enter train config yaml')
-    args = parser.parse_args()
-    train = Train(args.opt).train()
+#     parser = ArgumentParser()
+#     parser.add_argument("--opt", type=str, help='Enter train config yaml')
+#     args = parser.parse_args()
+#     train = Train(args.opt).train()
     

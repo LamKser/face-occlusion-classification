@@ -5,9 +5,13 @@ from torchvision import models
 
 
 def save_weight(model, epoch, save_dir, file):
-    save({'state_dict': model.state_dict(),
-                'epoch': epoch},
-                join(save_dir, file))
+    save(
+        {
+            'state_dict': model.state_dict(),
+            'epoch': epoch
+        },
+        join(save_dir, file)
+    )
     
 
 def load_weight(model, file, show=True):
@@ -24,7 +28,6 @@ def resume_train(model, weight):
     return model, epoch
 
 
-
 def get_pretrained(name):
     attrs = dir(models)
     check = lambda x : name + "_weights" in x.lower()
@@ -38,3 +41,7 @@ def get_pretrained(name):
 def get_model(name, pretrained):
     model = getattr(models, name)(weights = get_pretrained(name) if pretrained else None)
     return model
+
+
+def progress_bar():
+    pass

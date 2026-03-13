@@ -14,7 +14,10 @@
 git clone https://github.com/LamKser/face-occlusion-classification.git
 cd face-occlusion-classification
 ```
-<!-- * Tensorflow implement [here]() -->
+
+## Updates
+- **14/03/2026:** Update new source code
+
 ## :computer: **Hardware & Environment** 
 * All the train and test processes are done on google colab with GPU Tesla T4
     ```
@@ -89,15 +92,20 @@ cd face-occlusion-classification
     ```
 
 ## **:chart_with_upwards_trend: Test model**
+* Run demo with Streamlit
+    ```
+    streamlit run demo.py
+    ```
+
 * Test the model
 
     ```
-    python test_model.py --opt configs/test.yml
+    python3 main.py --mode eval --configs configs/test.yml
     ```
 * Test single image
 
     ```
-    python test_single_image.py --model <model_name> --weight <weight_path> --image <image_path>
+    python3 main.py --mode test --configs configs/test.yml --image-path <image_path>
     ```
 * ONNX model
     * Convert pytorch model to onnx

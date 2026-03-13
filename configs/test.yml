@@ -4,7 +4,7 @@
 # resnet18 | resnet50 | resnet152
 # convnext_base | convnext_large | convnext_small | convnext_tiny
 model: 
-  name: densenet169
+  name: vgg16
   classifier: softmax # softmax, sigmoid
 
 data:
@@ -12,11 +12,12 @@ data:
   mean: [0.485, 0.456, 0.406]
   std: [0.229, 0.224, 0.225]
   size: [224, 224]
+  batch: 16
 
-  test: ~
+  test: drafts/data/face_occlusion/Test
   num_class: 2
 
-weight: "densenet169.pth"
+weight: "/media/lamkser/Lam Kser/Code/face-occlusion-classification/experiment/softmax/vgg16/last_vgg16.pth"
 save: 
   path: results
 
