@@ -114,7 +114,7 @@ class EvalModel:
 
         # Confusion matrix
         print()
-        cm_df = pd.DataFrame(cm, index=["Non-occluded", "Occluded"], columns=["Non-occluded", "Occluded"])
+        cm_df = pd.DataFrame(cm, index=["(Label) Non-occluded", " " * 8 + "Occluded"], columns=["(Predict) Non-occluded", "Occluded"])
         print(cm_df)
 
         
