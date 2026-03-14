@@ -10,7 +10,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("--mode", type=str, help='Enter mode (train/eval/test)')
-    parser.add_argument("--configs-path", type=str, help='Enter train/test config yaml')
+    parser.add_argument("--config-path", type=str, help='Enter train/test config yaml')
     parser.add_argument("--image-path", type=str, help='Path of image for testing')
     
     args = parser.parse_args()
