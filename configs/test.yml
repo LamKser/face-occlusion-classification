@@ -4,7 +4,7 @@
 # resnet18 | resnet50 | resnet152
 # convnext_base | convnext_large | convnext_small | convnext_tiny
 model: 
-  name: vgg16
+  name: vgg19_bn
   classifier: softmax # softmax, sigmoid
 
 data:
@@ -17,7 +17,7 @@ data:
   test: drafts/data/face_occlusion/Test
   num_class: 2
 
-weight: "/media/lamkser/Lam Kser/Code/face-occlusion-classification/experiment/softmax/vgg16/last_vgg16.pth"
+weight: "experiment/softmax/vgg19_bn/last_vgg19_bn.pth"
 save: 
   path: results
 

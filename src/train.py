@@ -136,7 +136,7 @@ class TrainModel:
             progress_bar.set_description(f'Epoch [{epoch}][ Val ]')
 
             # Validation
-            for step, (imgs, targets) in progress_bar:
+            for step, (_, imgs, targets) in progress_bar:
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
                 outputs = self.model(imgs)
 
