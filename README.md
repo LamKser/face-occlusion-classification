@@ -76,7 +76,7 @@ cd face-occlusion-classification
 ## **:building_construction: Train model**
 * Train
     ```
-    python train.py --opt configs/train.yml
+    python main.py --mode train  --config-path configs/train.yaml
     ```
 
 * Show the training and validation progress
@@ -100,12 +100,12 @@ cd face-occlusion-classification
 * Test the model
 
     ```
-    python3 main.py --mode eval --configs configs/test.yml
+    python3 main.py --mode eval --config-path configs/test.yaml
     ```
 * Test single image
 
     ```
-    python3 main.py --mode test --configs configs/test.yml --image-path <image_path>
+    python3 main.py --mode test ---config-path configs/test.yaml --image-path <image_path>
     ```
 * ONNX model
     * Convert pytorch model to onnx
@@ -259,3 +259,13 @@ cd face-occlusion-classification
         <td><a href="https://drive.google.com/file/d/10rCsarUFijUzz3roSN1bi5-mfz_37c2o/view?usp=sharing">link</a></td>
     </tr>
 </table>
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=LamKser%2Fface-occlusion-classification&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=LamKser/face-occlusion-classification&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=LamKser/face-occlusion-classification&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=LamKser/face-occlusion-classification&type=date&legend=top-left" />
+ </picture>
+</a>
