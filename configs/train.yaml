@@ -1,0 +1,40 @@
+# Support model:
+# vgg16 | vgg19 | vgg16_bn | vgg19_bn
+# densenet169 | densenet201
+# resnet18 | resnet50 | resnet152
+# convnext_base | convnext_large | convnext_small | convnext_tiny
+model: 
+  name: vgg19
+  classifier: softmax # softmax, sigmoid
+
+data:
+  # mean ,std & size from ImageNet pretrain
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  size: [224, 224]
+
+  train: drafts/data/face_occlusion/Train
+  val: drafts/data/face_occlusion/Val
+
+train:
+  pretrain: true
+  learning_rate: !!float 1e-3
+  weight_decay: 0.0
+  momentum: 0.0
+
+  resume: 
+
+  num_class: 2
+  batch_size: 16  # You can change any number >= 1  (Not important for testing)
+  epochs: 20
+
+save:
+  path: experiment/test
+  weight: vgg19.pth
+  logger: logger
+
+
+wandb:
+  project: ~
+  name: ~
+  resume_id: ~
