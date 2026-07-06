@@ -259,13 +259,3 @@ cd face-occlusion-classification
         <td><a href="https://drive.google.com/file/d/10rCsarUFijUzz3roSN1bi5-mfz_37c2o/view?usp=sharing">link</a></td>
     </tr>
 </table>
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=LamKser%2Fface-occlusion-classification&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=LamKser/face-occlusion-classification&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=LamKser/face-occlusion-classification&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=LamKser/face-occlusion-classification&type=date&legend=top-left" />
- </picture>
-</a>
